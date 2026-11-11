@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian TIK Tema 4: Internet dan Search Engine - Kelas 4 SD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        indigoTheme: {
+                            bg: '#2e279d',
+                            cardBg: '#1e1b4b',
+                            accent: '#4f46e5',
+                            hover: '#4338ca',
+                            lightBg: '#f8fafc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #2e279d 50%, #312e81 100%);
+            min-height: 100vh;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-card { shadow: none !important; border: 1px solid #ccc !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased p-3 sm:p-6 flex items-center justify-center">
+
+    <!-- MAIN CONTAINER -->
+    <div class="w-full max-w-5xl mx-auto">
+        
+        <!-- HEADER TOP BAR -->
+        <header class="mb-5 flex flex-wrap items-center justify-between gap-3 text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/30 border border-indigo-400/40 flex items-center justify-center text-xl shadow-inner">
+                    <i class="fa-solid fa-shield-halved text-indigo-300"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl leading-tight">Ujian Keamanan & Literasi Digital TIK</h1>
+                    <p class="text-xs sm:text-sm text-indigo-200">Mode 1 Soal Per Halaman • Kelas 4 SD (Tema 4)</p>
+                </div>
+            </div>
+            
+            <!-- TIMER & CONTROL (Displayed during exam) -->
+            <div id="headerExamControls" class="hidden flex items-center gap-2 sm:gap-4 bg-indigo-900/60 backdrop-blur-md border border-indigo-500/30 px-4 py-2 rounded-xl">
+                <div class="text-right">
+                    <div class="text-[10px] uppercase tracking-wider text-indigo-200 font-medium">Sisa Waktu</div>
+                    <div id="timerDisplay" class="font-mono font-bold text-lg text-amber-300">60:00</div>
+                </div>
+                <div class="h-8 w-px bg-indigo-700/60"></div>
+                <button onclick="confirmSubmitExam()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition-all shadow-md flex items-center gap-1.5">
+                    <i class="fa-solid fa-paper-plane"></i> <span class="hidden sm:inline">Kumpulkan</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- SCREEN 1: IDENTITAS SISWA (FORM AWAL - EXACT MATCH GUI) -->
+        <div id="screenStart" class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 transition-all duration-300">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 p-6 sm:p-8 text-white">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="fa-solid fa-user-gear text-2xl text-indigo-200"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold">Identitas &amp; Konfigurasi Ujian</h2>
+                </div>
+                <p class="text-sm text-indigo-100 opacity-90">Lengkapi data diri siswa dengan teliti sebelum memulai pengerjaan tes TIK Tema 4.</p>
+            </div>
+
+            <!-- Card Body Form -->
+            <div class="p-6 sm:p-8 space-y-6">
+                <form id="studentForm" onsubmit="startExam(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Nama Panggilan Siswa</label>
+                        <input type="text" id="inputNama" required placeholder="Contoh: Hilde" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all font-medium text-slate-800 placeholder-slate-400">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Kelas</label>
+                            <input type="text" id="inputKelas" required placeholder="Contoh: 4A" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all font-medium text-slate-800 placeholder-slate-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">No. Absen</label>
+                            <input type="number" id="inputAbsen" required min="1" max="50" placeholder="Contoh: 18" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all font-medium text-slate-800 placeholder-slate-400">
+                        </div>
+                    </div>
+
+                    <!-- Ketentuan & Penilaian Info Card -->
+                    <div class="bg-indigo-50/70 border border-indigo-100 rounded-xl p-5 text-xs sm:text-sm text-indigo-950 space-y-2.5">
+                        <div class="font-bold flex items-center gap-2 text-indigo-900 text-sm">
+                            <i class="fa-solid fa-list-check text-indigo-600"></i> Ketentuan &amp; Skema Penilaian Ujian:
+                        </div>
+                        <ul class="space-y-1.5 list-disc list-inside text-slate-700 leading-relaxed">
+                            <li><b>Tampilan:</b> 1 Halaman untuk 1 Soal (Navigasi bebas berpindah antar nomor).</li>
+                            <li><b>Total Soal:</b> 35 Nomor (20 Pilihan Ganda, 10 Benar/Salah, 5 Esai Mandiri).</li>
+                            <li><b>Nilai Otomatis Sistem:</b> Maksimal <b>80 Poin</b> (PG = 60 Poin @3pt, Benar/Salah = 20 Poin @2pt).</li>
+                            <li><b>Nilai Esai:</b> 5 Soal Esai (Maks 20 Poin) akan diperiksa manual oleh Guru TIK.</li>
+                            <li><b>Koneksi:</b> Hasil nilai dan jawaban akan langsung terkirim otomatis ke Rekap Spreadsheet Guru.</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-2 flex items-center justify-between">
+                        <span class="text-xs text-slate-400">Mode Display: 1 Soal Per Halaman | Total: 35 Nomor</span>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-7 py-3 rounded-xl shadow-lg hover:shadow-indigo-200 transition-all flex items-center gap-2">
+                            Mulai Ujian <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: EXAMINATION PAGE (ONE PAGE PER QUESTION) -->
+        <div id="screenExam" class="hidden grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            <!-- LEFT / MAIN: QUESTION CONTAINER (3 Cols) -->
+            <div class="lg:col-span-3 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col justify-between min-h-[500px]">
+                
+                <!-- Question Top Header Bar -->
+                <div class="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span id="badgeQuestionType" class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Pilihan Ganda</span>
+                        <span id="badgeQuestionPoints" class="bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-1 rounded-full">3 Poin</span>
+                    </div>
+                    <div class="text-xs font-bold text-slate-500">
+                        Soal Ke- <span id="currentQuestionNum" class="text-indigo-600 text-sm font-extrabold">1</span> dari 35
+                    </div>
+                </div>
+
+                <!-- Question Content Area -->
+                <div class="p-6 sm:p-8 flex-1 flex flex-col justify-center">
+                    <div id="questionText" class="text-base sm:text-lg font-semibold text-slate-800 mb-6 leading-relaxed">
+                        <!-- Dynamic Question Text -->
+                    </div>
+
+                    <!-- Options Container (Dynamic PG, True/False, or Essay) -->
+                    <div id="optionsContainer" class="space-y-3">
+                        <!-- Dynamic Options rendered here -->
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Controls -->
+                <div class="bg-slate-50 border-t border-slate-100 p-4 sm:p-6 flex items-center justify-between gap-3">
+                    <button id="btnPrev" onclick="navigateQuestion(-1)" class="px-5 py-2.5 rounded-xl border border-slate-300 font-semibold text-sm text-slate-600 hover:bg-slate-100 transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-chevron-left"></i> Sebelumnya
+                    </button>
+
+                    <div class="flex items-center gap-2">
+                        <button id="btnNext" onclick="navigateQuestion(1)" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all flex items-center gap-2">
+                            Selanjutnya <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: QUESTION NAVIGATION GRID (1 Col) -->
+            <div class="lg:col-span-1 bg-white rounded-2xl shadow-xl border border-slate-100 p-5 flex flex-col justify-between h-fit space-y-4">
+                <div>
+                    <h3 class="font-bold text-sm text-slate-700 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-grip text-indigo-600 mr-1.5"></i> Navigasi Soal</span>
+                        <span id="answeredCountBadge" class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full">0/35 Terjawab</span>
+                    </h3>
+
+                    <!-- Status Legend -->
+                    <div class="grid grid-cols-3 gap-1.5 text-[10px] text-slate-500 mb-4 pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-200"></span> Belum</div>
+                        <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> Aktif</div>
+                        <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Terjawab</div>
+                    </div>
+
+                    <!-- 35 Questions Grid -->
+                    <div id="navGrid" class="grid grid-cols-5 gap-2 max-h-[360px] overflow-y-auto custom-scrollbar pr-1">
+                        <!-- Dynamic Buttons 1 to 35 -->
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100">
+                    <button onclick="confirmSubmitExam()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check-circle"></i> Selesai &amp; Kumpulkan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: RESULT & DISCUSSION SCREEN -->
+        <div id="screenResult" class="hidden space-y-6">
+            
+            <!-- Summary Result Banner -->
+            <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-slate-100 text-center relative overflow-hidden print-card">
+                <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-emerald-500 via-indigo-500 to-purple-500"></div>
+                
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 text-3xl mb-3 shadow-inner">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-1">Ujian Selesai!</h2>
+                <p class="text-sm text-slate-500 mb-6">Terima kasih, hasil ujian Anda telah berhasil dicatat dan terkirim ke sistem.</p>
+
+                <!-- Student Identity Card in Result -->
+                <div class="bg-slate-50 rounded-xl p-4 max-w-lg mx-auto mb-6 grid grid-cols-3 gap-3 text-center border border-slate-200 text-xs sm:text-sm">
+                    <div>
+                        <div class="text-slate-400 text-[10px] uppercase font-bold">Nama Siswa</div>
+                        <div id="resNama" class="font-bold text-slate-800 truncate">-</div>
+                    </div>
+                    <div>
+                        <div class="text-slate-400 text-[10px] uppercase font-bold">Kelas</div>
+                        <div id="resKelas" class="font-bold text-slate-800">-</div>
+                    </div>
+                    <div>
+                        <div class="text-slate-400 text-[10px] uppercase font-bold">No. Absen</div>
+                        <div id="resAbsen" class="font-bold text-slate-800">-</div>
+                    </div>
+                </div>
+
+                <!-- Score Box (PG + True/False Auto Score out of 80) -->
+                <div class="max-w-md mx-auto bg-gradient-to-br from-indigo-900 to-indigo-950 text-white rounded-2xl p-6 shadow-xl mb-6">
+                    <div class="text-xs uppercase tracking-widest text-indigo-300 font-semibold mb-1">Nilai Otomatis (PG &amp; Benar/Salah)</div>
+                    <div class="flex items-baseline justify-center gap-1 my-2">
+                        <span id="resTotalScore" class="text-5xl font-extrabold text-amber-300">0</span>
+                        <span class="text-xl text-indigo-300 font-bold">/ 80</span>
+                    </div>
+                    <div id="resGradeBadge" class="inline-block px-4 py-1 rounded-full text-xs font-bold bg-indigo-700/80 text-indigo-100 mt-1">
+                        Sangat Baik
+                    </div>
+                    <div class="text-[11px] text-indigo-300 mt-3 border-t border-indigo-800/80 pt-2.5">
+                        *Catatan: 5 Soal Esai (Maks 20 Poin) masih dalam proses pemeriksaan oleh Guru TIK.
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-3 no-print">
+                    <button onclick="window.print()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                    </button>
+                    <button onclick="location.reload()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Kembali ke Awal
+                    </button>
+                </div>
+            </div>
+
+            <!-- ESSAY ANSWERS SUMMARY (FOR TEACHER REVIEW) -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100 print-card">
+                <h3 class="font-bold text-base text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Jawaban Esai Siswa (Menunggu Pemeriksaan Guru)
+                </h3>
+                <div id="essayReviewList" class="space-y-4 text-sm">
+                    <!-- Dynamic Essay Review -->
+                </div>
+            </div>
+
+            <!-- DETAILED ANSWER REVIEW (RINGKASAN & KUNCI JAWABAN) -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100 print-card">
+                <h3 class="font-bold text-base text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-list-check text-indigo-600"></i> Pembahasan Lengkap &amp; Kunci Jawaban (PG &amp; Benar/Salah)
+                </h3>
+                <div id="fullReviewList" class="space-y-4">
+                    <!-- Dynamic Full Review Render -->
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ==========================================================================
+           1. HARDCODED GOOGLE SPREADSHEET SCRIPT WEB APP URL
+           Replace the string below with your deployed Apps Script Web App URL.
+           ========================================================================== */
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwgvUWRZ8Hrn2VpIrp8wyMzyK8vmn5ksEiHszlxU6R50iQn4Hbonp-qQ1YJ8nACBjY3/exec";
+
+        /* ==========================================================================
+           2. QUESTION DATABASE (35 HIGH QUALITY QUESTIONS FOR TEMA 4)
+           - 20 Multiple Choice (1-20) @ 3 Pts = 60
+           - 10 True/False (21-30) @ 2 Pts = 20
+           - 5 Essay (31-35) @ 4 Pts = 20 (Manual Grade)
+           ========================================================================== */
+        const questionsData = [
+            // --- 20 PILIHAN GANDA (PG) ---
+            {
+                id: 1,
+                type: "PG",
+                points: 3,
+                question: "Jaringan komputer raksasa di seluruh dunia yang saling terhubung untuk berbagi informasi, gambar, dan video diibaratkan seperti...",
+                options: [
+                    "A. Rumah pohon di hutan",
+                    "B. Bumi yang ditutupi sarang laba-laba raksasa",
+                    "C. Jalur kereta api tunggal",
+                    "D. Lapangan olahraga sekolah"
+                ],
+                answer: 1, // Index B
+                explanation: "Dalam materi TIK Tema 4, Internet diartikan sebagai jaringan raksasa seluruh dunia yang diibaratkan seperti sarang laba-laba yang saling terhubung."
+            },
+            {
+                id: 2,
+                type: "PG",
+                points: 3,
+                question: "Aplikasi khusus di internet yang berfungsi sebagai penunjuk jalan atau pustakawan pintar untuk mencari informasi dinamakan...",
+                options: [
+                    "A. Web Browser",
+                    "B. Search Engine (Mesin Pencari)",
+                    "C. Microsoft Word",
+                    "D. Antivirus"
+                ],
+                answer: 1, // Index B
+                explanation: "Search engine adalah aplikasi pintar pencari informasi seperti penunjuk jalan atau pustakawan di dunia digital."
+            },
+            {
+                id: 3,
+                type: "PG",
+                points: 3,
+                question: "Berikut ini yang merupakan contoh dari Search Engine (Mesin Pencari) aman khusus untuk anak-anak adalah...",
+                options: [
+                    "A. Google",
+                    "B. Kiddle",
+                    "C. Bing",
+                    "D. MSN"
+                ],
+                answer: 1, // Index B
+                explanation: "Kiddle adalah contoh mesin pencari khusus anak yang aman dan ramah pengguna muda."
+            },
+            {
+                id: 4,
+                type: "PG",
+                points: 3,
+                question: "Trik kata kunci (Keyword Hack) berupa Tanda Petik ( \"...\" ) berguna untuk...",
+                options: [
+                    "A. Membuang kata yang tidak diinginkan",
+                    "B. Mengunci frasa/kalimat agar kata yang dicari tidak terpisah",
+                    "C. Mencari arti atau definisi kata",
+                    "D. Menghapus riwayat pencarian"
+                ],
+                answer: 1, // Index B
+                explanation: "Tanda petik mengunci frasa persis sehingga kata-kata di dalamnya tidak terpisah dalam hasil pencarian."
+            },
+            {
+                id: 5,
+                type: "PG",
+                points: 3,
+                question: "Jika kamu ingin mencari gambar kucing tetapi TIDAK ingin menampilkan versi kartun, kata kunci yang tepat adalah...",
+                options: [
+                    "A. Kucing + Kartun",
+                    "B. Kucing \"Kartun\"",
+                    "C. Kucing -Kartun",
+                    "D. define: Kucing Kartun"
+                ],
+                answer: 2, // Index C
+                explanation: "Tanda minus (-) berfungsi mengusir atau menghilangkan kata yang tidak diinginkan dari hasil pencarian."
+            },
+            {
+                id: 6,
+                type: "PG",
+                points: 3,
+                question: "Fungsi dari kata hubung OR dalam pencarian kata kunci adalah...",
+                options: [
+                    "A. Memaksa menampilkan kedua kata sekaligus",
+                    "B. Mencari artikel yang memuat salah satu dari Kata A ATAU Kata B",
+                    "C. Menampilkan arti definisi kata",
+                    "D. Mengunci kalimat agar sama persis"
+                ],
+                answer: 1, // Index B
+                explanation: "Operator OR digunakan untuk mencari hasil yang memuat salah satu dari dua opsi kata kunci."
+            },
+            {
+                id: 7,
+                type: "PG",
+                points: 3,
+                question: "Perintah keyword hack yang digunakan khusus untuk memunculkan arti atau definisi dari suatu kata di baris teratas adalah...",
+                options: [
+                    "A. search:",
+                    "B. find:",
+                    "C. define:",
+                    "D. arti:"
+                ],
+                answer: 2, // Index C
+                explanation: "Perintah `define:` memunculkan definisi/arti kamus kata di paling atas hasil pencarian."
+            },
+            {
+                id: 8,
+                type: "PG",
+                points: 3,
+                question: "Rumah atau halaman digital di internet tempat menyimpan tulisan, gambar, atau video (ibarat buku cerita digital) dinamakan...",
+                options: [
+                    "A. Website (Situs Web)",
+                    "B. Flashdisk",
+                    "C. URL",
+                    "D. Keyboard"
+                ],
+                answer: 0, // Index A
+                explanation: "Website adalah rumah/halaman digital tempat menyimpan informasi dan karya di internet."
+            },
+            {
+                id: 9,
+                type: "PG",
+                points: 3,
+                question: "URL (Uniform Resource Locator) diibaratkan dalam kehidupan sehari-hari sebagai...",
+                options: [
+                    "A. Judul buku",
+                    "B. Alamat rumah lengkap untuk menuju ke lokasi website",
+                    "C. Warna sampul buku",
+                    "D. Penggaris sekolah"
+                ],
+                answer: 1, // Index B
+                explanation: "URL adalah alamat lengkap untuk menemukan lokasi spesifik suatu website di internet."
+            },
+            {
+                id: 10,
+                type: "PG",
+                points: 3,
+                question: "Perhatikan contoh URL berikut: https://bobo.grid.id/read/0842927/dongeng. Bagian 'bobo.grid.id' dinamakan...",
+                options: [
+                    "A. Protokol keamanan",
+                    "B. Domain / Nama rumah website",
+                    "C. Halaman spesifik",
+                    "D. Kata kunci"
+                ],
+                answer: 1, // Index B
+                explanation: "Domain adalah nama utama rumah website (seperti bobo.grid.id)."
+            },
+            {
+                id: 11,
+                type: "PG",
+                points: 3,
+                question: "Bagian `https://` pada sebuah URL web menunjukkan...",
+                options: [
+                    "A. Nama pembuat artikel",
+                    "B. Protokol pengiriman data yang aman",
+                    "C. Tanggal pembuatan website",
+                    "D. Jumlah pengunjung website"
+                ],
+                answer: 1, // Index B
+                explanation: "https:// merupakan singkatan protokol pengiriman data yang aman di internet."
+            },
+            {
+                id: 12,
+                type: "PG",
+                points: 3,
+                question: "Tindakan mengambil atau mengaku-ngaku karya tulisan/gambar orang lain sebagai buatan sendiri tanpa izin dinamakan...",
+                options: [
+                    "A. Digital Detox",
+                    "B. Plagiarisme",
+                    "C. Download",
+                    "D. Upload"
+                ],
+                answer: 1, // Index B
+                explanation: "Plagiarisme adalah perbuatan tidak jujur dengan mengklaim karya orang lain sebagai karya sendiri."
+            },
+            {
+                id: 13,
+                type: "PG",
+                points: 3,
+                question: "Sikap etika digital yang BENAR saat menyalin informasi dari internet untuk tugas sekolah adalah...",
+                options: [
+                    "A. Menghapus nama pengarang aslinya",
+                    "B. Selalu menyertakan Link Sumber (URL Website) di bagian bawah tugas",
+                    "C. Mengaku bahwa tulisan tersebut hasil karangan sendiri",
+                    "D. Menyebarkan cerita bohong (hoax)"
+                ],
+                answer: 1, // Index B
+                explanation: "Etika pahlawan digital wajib mencantumkan link sumber URL sebagai rasa hormat kepada pencipta karya."
+            },
+            {
+                id: 14,
+                type: "PG",
+                points: 3,
+                question: "Kombinasi tombol keyboard yang digunakan untuk menyalin (Copy) teks atau gambar adalah...",
+                options: [
+                    "A. Ctrl + V",
+                    "B. Ctrl + C",
+                    "C. Ctrl + P",
+                    "D. Ctrl + Z"
+                ],
+                answer: 1, // Index B
+                explanation: "Shortcut Ctrl + C digunakan untuk Copy (menyalin)."
+            },
+            {
+                id: 15,
+                type: "PG",
+                points: 3,
+                question: "Kombinasi tombol keyboard yang digunakan untuk menempelkan (Paste) teks atau gambar yang sudah di-copy adalah...",
+                options: [
+                    "A. Ctrl + C",
+                    "B. Ctrl + A",
+                    "C. Ctrl + V",
+                    "D. Ctrl + S"
+                ],
+                answer: 2, // Index C
+                explanation: "Shortcut Ctrl + V digunakan untuk Paste (menempelkan)."
+            },
+            {
+                id: 16,
+                type: "PG",
+                points: 3,
+                question: "Saat melakukan penelusuran di Google, cara menulis kata kunci yang EFEKTIF dan BENAR adalah...",
+                options: [
+                    "A. Tolong carikan cara membuat telur dadar yang enak dan gurih sekali",
+                    "B. resep telur dadar gulung rapi",
+                    "C. Apakah bisa memberitahu saya resep telur dadar?",
+                    "D. Halo google tolong bantu saya cari resep"
+                ],
+                answer: 1, // Index B
+                explanation: "Kata kunci efektif harus ringkas, spesifik, dan langsung pada topik utama tanpa kata obrolan."
+            },
+            {
+                id: 17,
+                type: "PG",
+                points: 3,
+                question: "Kegiatan mengambil jeda istirahat dari penggunaan HP/komputer agar tidak kecanduan gadget dinamakan...",
+                options: [
+                    "A. Digital Detox",
+                    "B. Copy Paste",
+                    "C. Search Engine",
+                    "D. Web Domain"
+                ],
+                answer: 0, // Index A
+                explanation: "Digital Detox adalah upaya mengurangi/menghentikan sejenak penggunaan gawai agar mata dan pikiran sehat."
+            },
+            {
+                id: 18,
+                type: "PG",
+                points: 3,
+                question: "Berita atau informasi palsu di internet yang belum jelas kebenarannya disebut...",
+                options: [
+                    "A. Artikel Edukasi",
+                    "B. Hoax / Fake News",
+                    "C. Keyword",
+                    "D. Online Browser"
+                ],
+                answer: 1, // Index B
+                explanation: "Hoax / Fake News adalah informasi bohong yang tidak boleh langsung dipercaya atau disebarkan."
+            },
+            {
+                id: 19,
+                type: "PG",
+                points: 3,
+                question: "Jika kamu ingin mencari artikel yang WAKTU DAN BAHANNYA wajib memuat kata 'etika' DAN kata 'internet' sekaligus, kata yang dipakai adalah...",
+                options: [
+                    "A. OR",
+                    "B. AND",
+                    "C. MINUS (-)",
+                    "D. DEFINE:"
+                ],
+                answer: 1, // Index B
+                explanation: "Operator AND memaksa mesin pencari menyajikan halaman yang mengandung kedua kata tersebut bersamaan."
+            },
+            {
+                id: 20,
+                type: "PG",
+                points: 3,
+                question: "Di mana posisi yang paling tepat untuk menuliskan Link Sumber URL pada kertas tugas kliping?",
+                options: [
+                    "A. Di judul utama paling atas",
+                    "B. Di baris paling bawah tepat di bawah gambar dan teks ringkasan",
+                    "C. Disembunyikan di belakang kertas",
+                    "D. Tidak perlu dituliskan sama sekali"
+                ],
+                answer: 1, // Index B
+                explanation: "Link sumber ditulis rapi di bagian paling bawah karya kliping sebagai referensi hak cipta."
+            },
+
+            // --- 10 BENAR / SALAH (TRUE / FALSE) ---
+            {
+                id: 21,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Google, Bing, dan MSN adalah contoh aplikasi Search Engine (Mesin Pencari).",
+                options: ["Benar", "Salah"],
+                answer: 0, // Benar
+                explanation: "Google, Bing, dan MSN memang merupakan contoh mesin pencari populer di dunia internet."
+            },
+            {
+                id: 22,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Menggunakan tanda minus (-) pada kata kunci bertujuan untuk membuat kata pencarian menjaddi dua.",
+                options: ["Benar", "Salah"],
+                answer: 1, // Salah
+                explanation: "Tanda minus (-) berfungsi mengusir/membuang kata yang tidak diinginkan, bukan menggandakan."
+            },
+            {
+                id: 23,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Perintah `define:internet` digunakan untuk menampilkan arti definisi dari kata internet.",
+                options: ["Benar", "Salah"],
+                answer: 0, // Benar
+                explanation: "Perintah `define:` khusus digunakan untuk memunculkan arti kamus/definisi frasa."
+            },
+            {
+                id: 24,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Domain diibaratkan sebagai alamat rumah lengkap, sedangkan URL adalah nama pemilik rumah.",
+                options: ["Benar", "Salah"],
+                answer: 1, // Salah
+                explanation: "Sebaliknya: Domain diibaratkan nama rumah/situs web, sedangkan URL adalah alamat lengkap lokasinya."
+            },
+            {
+                id: 25,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Tombol shortcut `Ctrl + C` digunakan untuk menempelkan gambar yang sudah disalin.",
+                options: ["Benar", "Salah"],
+                answer: 1, // Salah
+                explanation: "Ctrl + C adalah Copy (menyalin). Menempelkan gambar menggunakan shortcut Ctrl + V (Paste)."
+            },
+            {
+                id: 26,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Menyalin karya orang lain dari internet tanpa mencantumkan sumber adalah tindakan plagiarisme.",
+                options: ["Benar", "Salah"],
+                answer: 0, // Benar
+                explanation: "Mengutip/menyalin tanpa menuliskan sumber dinamakan plagiarisme dan melanggar etika digital."
+            },
+            {
+                id: 27,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Kata kunci pencarian yang baik hendaknya diawali dengan kalimat obrolan seperti 'Tolong carikan...'.",
+                options: ["Benar", "Salah"],
+                answer: 1, // Salah
+                explanation: "Kata kunci efektif harus ringkas dan langsung ke topik utama, hindari kata obrolan/kalimat tanya."
+            },
+            {
+                id: 28,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Kata hubung `OR` memaksa mesin pencari menampilkan artikel yang berisi kedua kata sekaligus.",
+                options: ["Benar", "Salah"],
+                answer: 1, // Salah
+                explanation: "Operator OR menampilkan salah satu kata kunci (A atau B), sedangkan yang memaksa keduanya adalah AND."
+            },
+            {
+                id: 29,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Kiddle adalah salah satu Search Engine aman yang ramah untuk anak-anak.",
+                options: ["Benar", "Salah"],
+                answer: 0, // Benar
+                explanation: "Kiddle dirancang khusus dengan penyaring konten aman bagi siswa dan anak-anak."
+            },
+            {
+                id: 30,
+                type: "BS",
+                points: 2,
+                question: "Pernyataan: Digital Detox dilakukan dengan cara bermain game online sepanjang hari tanpa berhenti.",
+                options: ["Benar", "Salah"],
+                answer: 1, // Salah
+                explanation: "Digital Detox artinya istirahat/jeda dari gawai agar terhindar dari kecanduan gadget."
+            },
+
+            // --- 5 ESAI (ESSAY - MANUAL GRADE) ---
+            {
+                id: 31,
+                type: "ESAI",
+                points: 4,
+                question: "Jelaskan perbedaan antara Website dan URL!",
+                answerKeyInfo: "Website = Rumah/Buku cerita digital. URL = Alamat rumah lengkap untuk menuju ke lokasi website."
+            },
+            {
+                id: 32,
+                type: "ESAI",
+                points: 4,
+                question: "Sebutkan 3 Trik Rahasia Kata Kunci (Keyword Hacks) beserta fungsi singkatnya masing-masing!",
+                answerKeyInfo: "Contoh: 1) Tanda petik \"\" (mengunci kata), 2) Tanda minus - (mengusir kata), 3) define: (menampilkan arti kata)."
+            },
+            {
+                id: 33,
+                type: "ESAI",
+                points: 4,
+                question: "Mengapa kita TIDAK BOLEH melakukan plagiarisme dan WAJIB mencantumkan Link Sumber (URL) saat mengambil tugas dari internet?",
+                answerKeyInfo: "Agar jujur, tidak mengaku karya orang lain, dan menghormati/menghargai pencipta asli karya tersebut."
+            },
+            {
+                id: 34,
+                type: "ESAI",
+                points: 4,
+                question: "Tuliskan fungsi dari tombol kombinasi keyboard `Ctrl + C` dan `Ctrl + V`!",
+                answerKeyInfo: "Ctrl + C = Copy (menyalin teks/gambar). Ctrl + V = Paste (menempelkan teks/gambar ke tempat baru)."
+            },
+            {
+                id: 35,
+                type: "ESAI",
+                points: 4,
+                question: "Sebutkan 3 contoh Search Engine (Mesin Pencari) yang kamu ketahui!",
+                answerKeyInfo: "Contoh: Google, Bing, Kiddle, MSN, Yahoo."
+            }
+        ];
+
+        /* ==========================================================================
+           3. GLOBAL STATE MANAGERS
+           ========================================================================== */
+        let studentInfo = { nama: "", kelas: "", absen: "" };
+        let userAnswers = {}; // { qId: answerValue }
+        let currentQuestionIndex = 0;
+        let timerInterval = null;
+        let timeLeftSeconds = 60 * 60; // 60 Minutes Countdown
+
+        /* ==========================================================================
+           4. APP NAVIGATION & CORE FUNCTIONS
+           ========================================================================== */
+        
+        // Start Exam from Form
+        function startExam(event) {
+            event.preventDefault();
+            const nama = document.getElementById('inputNama').value.trim();
+            const kelas = document.getElementById('inputKelas').value.trim();
+            const absen = document.getElementById('inputAbsen').value.trim();
+
+            if (!nama || !kelas || !absen) {
+                alert("Mohon lengkapi semua data identitas siswa terlebih dahulu!");
+                return;
+            }
+
+            studentInfo = { nama, kelas, absen };
+
+            // Switch Screen
+            document.getElementById('screenStart').classList.add('hidden');
+            document.getElementById('screenExam').classList.remove('hidden');
+            document.getElementById('headerExamControls').classList.remove('hidden');
+
+            // Render Nav & First Question
+            renderNavGrid();
+            loadQuestion(0);
+            startTimer();
+        }
+
+        // Render Nav Grid Buttons (1 to 35)
+        function renderNavGrid() {
+            const gridContainer = document.getElementById('navGrid');
+            gridContainer.innerHTML = "";
+
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `navBtn_${idx}`;
+                btn.type = "button";
+                btn.onclick = () => loadQuestion(idx);
+                btn.className = getNavBtnClass(idx);
+                btn.innerText = idx + 1;
+                gridContainer.appendChild(btn);
+            });
+            updateAnsweredBadge();
+        }
+
+        function getNavBtnClass(idx) {
+            const qId = questionsData[idx].id;
+            const isAnswered = userAnswers.hasOwnProperty(qId) && userAnswers[qId] !== "";
+            const isCurrent = idx === currentQuestionIndex;
+
+            let base = "h-9 w-full rounded-lg font-bold text-xs transition-all flex items-center justify-center border ";
+            if (isCurrent) {
+                return base + "bg-indigo-600 text-white border-indigo-700 ring-2 ring-indigo-300 shadow-md";
+            } else if (isAnswered) {
+                return base + "bg-emerald-500 text-white border-emerald-600 shadow-sm";
+            } else {
+                return base + "bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200";
+            }
+        }
+
+        function updateNavGridStyles() {
+            questionsData.forEach((_, idx) => {
+                const btn = document.getElementById(`navBtn_${idx}`);
+                if (btn) btn.className = getNavBtnClass(idx);
+            });
+            updateAnsweredBadge();
+        }
+
+        function updateAnsweredBadge() {
+            const count = Object.keys(userAnswers).filter(k => userAnswers[k] !== "").length;
+            document.getElementById('answeredCountBadge').innerText = `${count}/35 Terjawab`;
+        }
+
+        // Load Question Data by Index
+        function loadQuestion(idx) {
+            currentQuestionIndex = idx;
+            const q = questionsData[idx];
+
+            // Header elements
+            document.getElementById('currentQuestionNum').innerText = idx + 1;
+            document.getElementById('badgeQuestionPoints').innerText = `${q.points} Poin`;
+
+            const badgeType = document.getElementById('badgeQuestionType');
+            if (q.type === 'PG') {
+                badgeType.innerText = "Pilihan Ganda";
+                badgeType.className = "bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider";
+            } else if (q.type === 'BS') {
+                badgeType.innerText = "Benar / Salah";
+                badgeType.className = "bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider";
+            } else {
+                badgeType.innerText = "Soal Esai";
+                badgeType.className = "bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider";
+            }
+
+            // Question Text
+            document.getElementById('questionText').innerHTML = `
+                <span class="text-indigo-600 font-extrabold mr-1.5">${idx + 1}.</span> ${q.question}
+            `;
+
+            // Options Container
+            const optsContainer = document.getElementById('optionsContainer');
+            optsContainer.innerHTML = "";
+
+            const currentAns = userAnswers[q.id];
+
+            if (q.type === 'PG' || q.type === 'BS') {
+                q.options.forEach((optText, optIdx) => {
+                    const isChecked = currentAns === optIdx;
+                    const optBtn = document.createElement('label');
+                    optBtn.className = `flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        isChecked 
+                        ? 'border-indigo-600 bg-indigo-50/80 text-indigo-950 font-semibold shadow-sm' 
+                        : 'border-slate-200 bg-white hover:border-slate-300 text-slate-700'
+                    }`;
+
+                    optBtn.innerHTML = `
+                        <input type="radio" name="q_opt" value="${optIdx}" ${isChecked ? 'checked' : ''} 
+                            onchange="saveAnswer(${q.id}, ${optIdx})" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                        <span class="text-sm leading-snug">${optText}</span>
+                    `;
+                    optsContainer.appendChild(optBtn);
+                });
+            } else if (q.type === 'ESAI') {
+                const textarea = document.createElement('textarea');
+                textarea.rows = 5;
+                textarea.placeholder = "Ketik jawaban esai kamu di sini dengan jelas...";
+                textarea.className = "w-full p-4 rounded-xl border-2 border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-sm text-slate-800 transition-all custom-scrollbar";
+                textarea.value = currentAns || "";
+                textarea.oninput = (e) => saveAnswer(q.id, e.target.value);
+                optsContainer.appendChild(textarea);
+            }
+
+            // Update Prev / Next buttons
+            document.getElementById('btnPrev').disabled = (idx === 0);
+            
+            const btnNext = document.getElementById('btnNext');
+            if (idx === questionsData.length - 1) {
+                btnNext.innerHTML = `Selesai <i class="fa-solid fa-check"></i>`;
+                btnNext.className = "px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md transition-all flex items-center gap-2";
+            } else {
+                btnNext.innerHTML = `Selanjutnya <i class="fa-solid fa-chevron-right"></i>`;
+                btnNext.className = "px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all flex items-center gap-2";
+            }
+
+            updateNavGridStyles();
+        }
+
+        function saveAnswer(qId, val) {
+            userAnswers[qId] = val;
+            updateNavGridStyles();
+        }
+
+        function navigateQuestion(direction) {
+            const nextIdx = currentQuestionIndex + direction;
+            if (nextIdx >= 0 && nextIdx < questionsData.length) {
+                loadQuestion(nextIdx);
+            } else if (nextIdx >= questionsData.length) {
+                confirmSubmitExam();
+            }
+        }
+
+        // Timer Countdown
+        function startTimer() {
+            const timerElem = document.getElementById('timerDisplay');
+            timerInterval = setInterval(() => {
+                timeLeftSeconds--;
+                if (timeLeftSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu ujian telah habis! Sistem akan mengumpulkan jawaban Anda otomatis.");
+                    submitExam();
+                    return;
+                }
+                const mins = Math.floor(timeLeftSeconds / 60);
+                const secs = timeLeftSeconds % 60;
+                timerElem.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Confirm Submit
+        function confirmSubmitExam() {
+            const answeredCount = Object.keys(userAnswers).filter(k => userAnswers[k] !== "").length;
+            const total = questionsData.length;
+            const unanswered = total - answeredCount;
+
+            let msg = `Kamu telah menjawab ${answeredCount} dari ${total} soal.`;
+            if (unanswered > 0) {
+                msg += ` Masih ada ${unanswered} soal yang BELUM dijawab.`;
+            }
+            msg += "\n\nYakin ingin mengumpulkan ujian sekarang?";
+
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        /* ==========================================================================
+           5. SUBMIT EXAM, CALCULATE SCORE & SEND TO GOOGLE SPREADSHEET
+           ========================================================================== */
+        function submitExam() {
+            clearInterval(timerInterval);
+
+            // Calculate PG + True/False Scores (Total 80 Points)
+            let autoScore = 0;
+
+            questionsData.forEach(q => {
+                const userAns = userAnswers[q.id];
+                if (q.type === 'PG' || q.type === 'BS') {
+                    if (userAns === q.answer) {
+                        autoScore += q.points;
+                    }
+                }
+            });
+
+            // Display Result Screen
+            document.getElementById('screenExam').classList.add('hidden');
+            document.getElementById('headerExamControls').classList.add('hidden');
+            document.getElementById('screenResult').classList.remove('hidden');
+
+            // Populate Identity Summary
+            document.getElementById('resNama').innerText = studentInfo.nama;
+            document.getElementById('resKelas').innerText = studentInfo.kelas;
+            document.getElementById('resAbsen').innerText = studentInfo.absen;
+            document.getElementById('resTotalScore').innerText = autoScore;
+
+            // Grade Badge
+            const badgeElem = document.getElementById('resGradeBadge');
+            if (autoScore >= 70) {
+                badgeElem.innerText = "Sangat Baik (A)";
+                badgeElem.className = "inline-block px-4 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white mt-1 shadow";
+            } else if (autoScore >= 55) {
+                badgeElem.innerText = "Baik (B)";
+                badgeElem.className = "inline-block px-4 py-1 rounded-full text-xs font-bold bg-blue-500 text-white mt-1 shadow";
+            } else if (autoScore >= 40) {
+                badgeElem.innerText = "Cukup (C)";
+                badgeElem.className = "inline-block px-4 py-1 rounded-full text-xs font-bold bg-amber-500 text-white mt-1 shadow";
+            } else {
+                badgeElem.innerText = "Perlu Bimbingan (D)";
+                badgeElem.className = "inline-block px-4 py-1 rounded-full text-xs font-bold bg-rose-500 text-white mt-1 shadow";
+            }
+
+            // Render Reviews
+            renderEssayReview();
+            renderFullReview();
+
+            // Send Data to Google Spreadsheet Script
+            sendDataToGoogleSheet(autoScore);
+
+            // Scroll to Top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Essay Review List
+        function renderEssayReview() {
+            const list = document.getElementById('essayReviewList');
+            list.innerHTML = "";
+
+            const essayQuestions = questionsData.filter(q => q.type === 'ESAI');
+            essayQuestions.forEach((q, i) => {
+                const userAns = userAnswers[q.id] || "(Siswa tidak menjawab)";
+                const item = document.createElement('div');
+                item.className = "bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2";
+                item.innerHTML = `
+                    <div class="font-bold text-indigo-950">
+                        Soal ${q.id}. ${q.question} <span class="text-xs font-normal text-slate-500">(Maks ${q.points} Poin)</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-slate-800 italic">
+                        " ${userAns} "
+                    </div>
+                    <div class="text-xs text-indigo-700 bg-indigo-50 p-2.5 rounded-lg border border-indigo-100">
+                        <b>Kunci / Acuan Jawaban Guru:</b> ${q.answerKeyInfo}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Render Full Answer Key Review (PG + BS)
+        function renderFullReview() {
+            const list = document.getElementById('fullReviewList');
+            list.innerHTML = "";
+
+            const autoQuestions = questionsData.filter(q => q.type === 'PG' || q.type === 'BS');
+            autoQuestions.forEach(q => {
+                const userAnsIdx = userAnswers[q.id];
+                const isCorrect = userAnsIdx === q.answer;
+                const userAnsText = (userAnsIdx !== undefined && userAnsIdx !== null && userAnsIdx !== "")
+                    ? q.options[userAnsIdx] 
+                    : "Tidak Dijawab";
+                const correctAnsText = q.options[q.answer];
+
+                const card = document.createElement('div');
+                card.className = `p-4 sm:p-5 rounded-xl border text-sm space-y-2 ${
+                    isCorrect 
+                    ? 'bg-emerald-50/50 border-emerald-200' 
+                    : 'bg-rose-50/50 border-rose-200'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="font-bold text-slate-800">
+                            Soal ${q.id}. ${q.question}
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold shrink-0 ${
+                            isCorrect 
+                            ? 'bg-emerald-100 text-emerald-700' 
+                            : 'bg-rose-100 text-rose-700'
+                        }">
+                            ${isCorrect ? '<i class="fa-solid fa-check mr-1"></i> Benar (+' + q.points + ')' : '<i class="fa-solid fa-xmark mr-1"></i> Salah (0)'}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
+                        <div class="p-2.5 rounded-lg ${isCorrect ? 'bg-emerald-100/60 text-emerald-900' : 'bg-rose-100/60 text-rose-900'}">
+                            <b>Jawaban Siswa:</b> ${userAnsText}
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-indigo-100/60 text-indigo-900">
+                            <b>Kunci Jawaban:</b> ${correctAnsText}
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-slate-600 bg-white/80 p-3 rounded-lg border border-slate-200/80 leading-relaxed">
+                        <b><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Pembahasan:</b> ${q.explanation}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        /* ==========================================================================
+           6. HARDCODED FETCH POST TO GOOGLE SPREADSHEET (NO-CORS MODE)
+           ========================================================================== */
+        function sendDataToGoogleSheet(autoScore) {
+            if (!WEB_APP_URL) {
+                console.warn("Google Sheet Web App URL belum dikonfigurasi.");
+                return;
+            }
+
+            // Hitung rincian nilai PG & Benar-Salah langsung di JS
+            let scorePG = 0;
+            let scoreTF = 0;
+
+            for (let i = 1; i <= 20; i++) {
+                const val = userAnswers[i] || userAnswers[String(i)];
+                if (val !== undefined && val === questionsData[i - 1].correctAnswer) {
+                    scorePG += 3;
+                }
+            }
+
+            for (let i = 21; i <= 30; i++) {
+                const val = userAnswers[i] || userAnswers[String(i)];
+                if (val !== undefined && val === questionsData[i - 1].correctAnswer) {
+                    scoreTF += 2;
+                }
+            }
+
+            // Gunakan URLSearchParams agar lolos pengiriman POST Apps Script tanpa terpotong CORS
+            const formData = new URLSearchParams();
+            formData.append("nama", studentInfo.nama || "-");
+            formData.append("kelas", studentInfo.kelas || "-");
+            formData.append("noAbsen", studentInfo.absen || "-");
+            formData.append("nilaiOtomatis", autoScore);
+            formData.append("scorePG", scorePG);
+            formData.append("scoreTF", scoreTF);
+            formData.append("esai1", userAnswers[31] || userAnswers["31"] || "-");
+            formData.append("esai2", userAnswers[32] || userAnswers["32"] || "-");
+            formData.append("esai3", userAnswers[33] || userAnswers["33"] || "-");
+            formData.append("esai4", userAnswers[34] || userAnswers["34"] || "-");
+            formData.append("esai5", userAnswers[35] || userAnswers["35"] || "-");
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData.toString()
+            })
+            .then(() => console.log("Data berhasil dikirim ke Google Sheets!"))
+            .catch(err => console.error("Gagal mengirim data:", err));
+        }
+    </script>
+</body>
+</html>
